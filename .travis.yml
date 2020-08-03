@@ -8,7 +8,7 @@ jobs:
     - stage: build docker images
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t $DOCKER_USERNAME/ense701-seer-server server
+      - docker build -t $DOCKER_USERNAME/ense701-seer-server api
       - docker images
       - docker push $DOCKER_USERNAME/ense701-seer-server
     - script:
