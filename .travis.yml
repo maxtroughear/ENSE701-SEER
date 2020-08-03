@@ -1,0 +1,19 @@
+langauge: node_js
+dist: focal
+services:
+  - docker
+
+jobs:
+  include:
+    - stage: build docker images
+    - script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t $DOCKER_USERNAME/ense701-seer-server server
+      - docker images
+      - docker push $DOCKER_USERNAME/ense701-seer-server
+    - script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t $DOCKER_USERNAME/ense701-seer-client client
+      - docker images
+      - docker push $DOCKER_USERNAME/ense701-seer-client
+    
