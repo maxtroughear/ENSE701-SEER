@@ -6,7 +6,7 @@ services:
 jobs:
   include:
     - stage: build docker images
-    - script:
+      script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - docker build -t $DOCKER_USERNAME/ense701-seer-server server
       - docker images
