@@ -1,4 +1,7 @@
 langauge: node_js
+node_js:
+  - node
+
 dist: focal
 services:
   - docker
