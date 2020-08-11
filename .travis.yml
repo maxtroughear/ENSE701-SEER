@@ -16,7 +16,6 @@ jobs:
       before_install:
       - cd ./api
       script:
-      - echo $MONGO_URL
       - npm run test
     - before_install:
       - cd ./client
