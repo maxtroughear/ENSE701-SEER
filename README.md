@@ -3,9 +3,8 @@
 [![Build Status](https://travis-ci.com/maxtroughear/ENS701-SEER.svg?branch=master)](https://travis-ci.com/maxtroughear/ENS701-SEER)
 
 ## SEER (Software Engineering Evidence Repository)
-### **Created by** Max Troughear, Matthew Rook, Michael Rust
+**Created by** Max Troughear, Matthew Rook, Michael Rust
 
----
 
 ## Usage
 
