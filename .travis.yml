@@ -1,11 +1,27 @@
 langauge: node_js
+node_js:
+  - node
+
 dist: focal
 services:
   - docker
 
+stages:
+  - name: build
+    if: branch = master
+
 jobs:
   include:
-    - stage: build docker images
+    - stage: test
+      before_install:
+      - cd ./api
+      script:
+      - npm run test
+    - before_install:
+      - cd ./client
+      script:
+      - npm run test -- --watchAll=false
+    - stage: build
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - docker build -t $DOCKER_USERNAME/ense701-seer-server api
