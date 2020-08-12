@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const mongoose = require('mongoose');
+const db = require('mongoose').connection;
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -11,9 +11,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/mongo', function (req, res, next) {
-  const db = mongoose.connection;
-
-  db.collection('sample').findOne({}, function(err, doc) {
+  db.collection('sample').findOne({}, function (err, doc) {
     if (err) {
       res.status(500).end();
       return;

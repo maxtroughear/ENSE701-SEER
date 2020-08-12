@@ -9,7 +9,14 @@ require('dotenv').config();
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+db.on('error', function (err) {
+  console.error('failed to connect to mongodb');
+  console.error('connection error:', err);
+  process.exit(1);
+});
+db.once('connected', function () {
+  console.log('DB Ready');
+});
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
