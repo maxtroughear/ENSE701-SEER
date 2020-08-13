@@ -6,12 +6,12 @@ const should = chai.should();
 chai.use(chaiHttp);
 
 describe('API', function () {
-  this.timeout(10000);
+  this.timeout(20000);
   this.slow(300);
   describe('Hello World', function () {
     it('should display \'Hello World\'', (done) => {
       chai.request(server)
-        .get('/')
+        .get('/api')
         .send({})
         .end(function (err, res) {
           res.should.have.status(200);
@@ -24,7 +24,7 @@ describe('API', function () {
   describe('Hello MongoDB', function () {
     it('should display \'Hello MongoDB\'', (done) => {
       chai.request(server)
-        .get('/mongo')
+        .get('/api/mongo')
         .send({})
         .end(function (err, res) {
           res.should.have.status(200);
@@ -35,7 +35,7 @@ describe('API', function () {
 
     it('should display \'Hello MongoDB\'', (done) => {
       chai.request(server)
-        .get('/mongo')
+        .get('/api/mongo')
         .send({})
         .end(function (err, res) {
           res.should.have.status(200);
