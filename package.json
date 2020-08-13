@@ -2,18 +2,18 @@
   "name": "ens701-seer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "cd ./api & npm run dev"
+    "start": "cd api && npm start",
+    "build": "cd api && npm install && cd ../client && npm install && npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maxtroughear/ENS701-SEER.git"
+    "url": "git+https://github.com/maxtroughear/ENSE701-SEER.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/maxtroughear/ENS701-SEER/issues"
+    "url": "https://github.com/maxtroughear/ENSE701-SEER/issues"
   },
-  "homepage": "https://github.com/maxtroughear/ENS701-SEER#readme"
+  "homepage": "https://github.com/maxtroughear/ENSE701-SEER#readme"
 }
