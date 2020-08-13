@@ -6,7 +6,7 @@ const should = chai.should();
 chai.use(chaiHttp);
 
 describe('API', function () {
-  this.timeout(10000);
+  this.timeout(20000);
   this.slow(300);
   describe('Hello World', function () {
     it('should display \'Hello World\'', (done) => {
