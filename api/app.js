@@ -30,14 +30,21 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(distDir));
+
+// Serve static react app only if env is set to true
+if (process.env.SERVE_STATIC) {
+  app.use(express.static(distDir));
+}
 
 app.use('/api', indexRouter);
 
-// Handles any requests that don't match the ones above
-app.get('*', (req, res) => {
-  res.sendFile(indexFile);
-});
+// Serve static react app only if env is set to true
+if (process.env.SERVE_STATIC) {
+  // Handles any requests that don't match the ones above
+  app.get('*', (req, res) => {
+    res.sendFile(indexFile);
+  });
+}
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {
