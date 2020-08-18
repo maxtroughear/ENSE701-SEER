@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -25,6 +26,10 @@ const indexFile = path.join(distDir, '/index.html');
 const indexRouter = require('./routes/index');
 
 const app = express();
+
+if (process.env.ENVIRONMENT === 'development') {
+  app.use(cors());
+}
 
 app.use(logger('dev'));
 app.use(express.json());
