@@ -1,0 +1,13 @@
+.navBar {
+    background-color: #099246;
+    box-shadow: 0 2px 8px #bbb;
+}
+
+.headerLetter {
+    font-size: 8rem !important;
+    color: #f3faf6 !important;
+}
+
+.headerText {
+    color: #f3faf6 !important;
+}
