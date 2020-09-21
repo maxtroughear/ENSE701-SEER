@@ -4,8 +4,6 @@ import DatePicker from 'react-datepicker';
 
 import Platform from './Platform';
 
-import style from './SearchForm.module.css';
-
 function DateFields(props) {
   const { onFromDateChange, onToDateChange } = props;
   const [fromDate, setFromDate] = useState(new Date());
@@ -68,7 +66,7 @@ function SearchForm() {
           <Grid.Column>
             <Form>
               <Form.Field>
-                <Form.Input fluid icon="search" placeholder="Search..." fluid />
+                <Form.Input fluid icon="search" placeholder="Search..." />
               </Form.Field>
               <Accordion exclusive={false}>
                 <Accordion.Title
