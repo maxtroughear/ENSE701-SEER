@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Grid, Header } from 'semantic-ui-react'
+import { Link } from 'react-router-dom';
+import { Button, Container, Grid, Header } from 'semantic-ui-react'
 
 import style from './HeaderBar.module.css';
 
@@ -50,6 +51,14 @@ function HeaderBar() {
               </Grid.Column>
               <Grid.Column>
                 <Header textAlign="center" size="small" className={style.headerText}>Repository</Header>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={2}>
+              <Grid.Column>
+                <Button as={Link} to="/" fluid>Search</Button>
+              </Grid.Column>
+              <Grid.Column>
+                <Button as={Link} to="/submit" fluid>Submit</Button>
               </Grid.Column>
             </Grid.Row>
           </Grid>
