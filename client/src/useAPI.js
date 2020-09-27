@@ -25,9 +25,41 @@ function useAPI(resource) {
     return () => {
       isStopped = true
     }
-  }, []);
+  }, [resource]);
 
-  return [data, loading, error]
+  return { data, loading, error }
 }
 
-export default useAPI;
+function useLazyAPI() {
+  const [loading, setLoading] = React.useState(true);
+  const [data, setData] = React.useState(null);
+  const [error, setError] = React.useState(null);
+
+  const makeRequest = (resource) => {
+    let isStopped = false
+
+    console.log('making request');
+
+    if (!isStopped) {
+      setLoading(true);
+      axios.get(buildRequest(resource))
+        .then(function (response) {
+          setData(response.data);
+          setLoading(false);
+        }).catch(function (err) {
+          setError(err);
+        });
+    }
+
+    return () => {
+      isStopped = true
+    }
+  }
+
+  return [makeRequest, { data, loading, error }]
+}
+
+export {
+  useAPI,
+  useLazyAPI,
+}

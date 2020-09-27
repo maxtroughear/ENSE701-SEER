@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Accordion, Card, Form, Grid, Header, Icon } from 'semantic-ui-react';
 import DatePicker from 'react-datepicker';
 
 import Platform from './Platform';
+import { useLazyAPI } from '../useAPI';
 
 function DateFields(props) {
   const { onFromDateChange, onToDateChange } = props;
@@ -44,14 +45,22 @@ function DateFields(props) {
 function SearchForm() {
   const [activeIndex, setActiveIndex] = useState(-1);
 
+  const [title, setTitle] = useState('');
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
+
+  const [makeRequest, { results, loading }] = useLazyAPI();
 
   function handleClick(e, titleProps) {
     const { index } = titleProps
     const newIndex = activeIndex === index ? -1 : index
 
     setActiveIndex(newIndex);
+  }
+
+  function handleSearch(e) {
+    e.preventDefault();
+    makeRequest(`/search?title=${title}`)
   }
 
   return (
@@ -64,9 +73,9 @@ function SearchForm() {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>
-            <Form>
+            <Form onSubmit={handleSearch}>
               <Form.Field>
-                <Form.Input fluid icon="search" placeholder="Search..." />
+                <Form.Input fluid icon="search" placeholder="Search..." onChange={(e) => setTitle(e.target.value)} />
               </Form.Field>
               <Accordion exclusive={false}>
                 <Accordion.Title
@@ -77,11 +86,12 @@ function SearchForm() {
                 />
                 <Accordion.Content active={activeIndex === 0} content={<DateFields onFromDateChange={setFromDate} onToDateChange={setToDate} />} />
               </Accordion>
-              <Form.Button>Search</Form.Button>
+              <Form.Button type="submit">Search</Form.Button>
             </Form>
           </Grid.Column>
         </Grid.Row>
       </Platform>
+      {/* results */}
       <Platform>
         <Grid.Row>
           <Grid.Column>

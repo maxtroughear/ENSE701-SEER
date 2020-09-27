@@ -1,9 +1,9 @@
 import React from 'react';
 
-import useAPI from './useAPI';
+import { useAPI } from './useAPI';
 
 function HelloWorld() {
-  const [data, loading] = useAPI('/mongo');
+  const { data, loading } = useAPI('/mongo');
 
   return (
     <div>
