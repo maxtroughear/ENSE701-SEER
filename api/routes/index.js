@@ -8,11 +8,11 @@ const search = require('./search');
 router.use(search);
 
 // /* GET home page. */
-// router.get('/', function (req, res, next) {
-//   res.json({
-//     message: "Hello World",
-//   });
-// });
+router.get('/', function (req, res, next) {
+  res.json({
+    message: "Hello World",
+  });
+});
 
 router.get('/mongo', function (req, res, next) {
   db.collection('sample').findOne({}, function (err, doc) {
