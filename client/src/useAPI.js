@@ -31,12 +31,13 @@ function useAPI(resource) {
 }
 
 function useLazyAPI() {
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(null);
 
   const makeRequest = (resource) => {
     let isStopped = false
+    setLoading(true);
 
     console.log('making request');
 
@@ -48,6 +49,7 @@ function useLazyAPI() {
           setLoading(false);
         }).catch(function (err) {
           setError(err);
+          setLoading(false);
         });
     }
 
