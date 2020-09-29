@@ -1,9 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Accordion, Card, Form, Grid, Header, Icon } from 'semantic-ui-react';
+import { Accordion, Card, Dimmer, Form, Grid, Header, Icon, Loader, Segment } from 'semantic-ui-react';
 import DatePicker from 'react-datepicker';
 
 import Platform from './Platform';
 import { useLazyAPI } from '../useAPI';
+
+import style from './SearchForm.module.css';
 
 function DateFields(props) {
   const { onFromDateChange, onToDateChange } = props;
@@ -49,7 +51,7 @@ function SearchForm() {
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
 
-  const [makeRequest, { results, loading }] = useLazyAPI();
+  const [makeRequest, { data: results, loading }] = useLazyAPI();
 
   function handleClick(e, titleProps) {
     const { index } = titleProps
@@ -61,6 +63,30 @@ function SearchForm() {
   function handleSearch(e) {
     e.preventDefault();
     makeRequest(`/search?title=${title}`)
+  }
+
+  function ResultsComponent() {
+    if (loading) {
+      return (
+        <Dimmer active inverted>
+          <Loader>Searching</Loader>
+        </Dimmer>
+      )
+    }
+    if (results == null) {
+      return null;
+    }
+    return results.map((r, index) => {
+      return (<Card fluid key={"search-results-" + index}>
+        <Card.Content header={r.title} />
+        <Card.Content description={<p>Result description</p>} />
+        <Card.Content extra>
+          <Icon name='user' />
+            Author: 'Someone'
+        </Card.Content>
+      </Card>
+      )
+    })
   }
 
   return (
@@ -100,23 +126,8 @@ function SearchForm() {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>
-            <Card.Group centered>
-              <Card fluid>
-                <Card.Content header='Result 1' />
-                <Card.Content description={<p>Result description</p>} />
-                <Card.Content extra>
-                  <Icon name='user' />
-                  Author: 'Someone'
-                </Card.Content>
-              </Card>
-              <Card fluid>
-                <Card.Content header='Result 1' />
-                <Card.Content description={<p>Result description</p>} />
-                <Card.Content extra>
-                  <Icon name='user' />
-                    Author: 'Someone'
-                  </Card.Content>
-              </Card>
+            <Card.Group centered className={style.results}>
+              <ResultsComponent />
             </Card.Group>
           </Grid.Column>
         </Grid.Row>

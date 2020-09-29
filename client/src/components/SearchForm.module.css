@@ -2,3 +2,7 @@
     display: flex;
     width: '100%';
 }
+
+.results {
+    min-height: 200px;
+}

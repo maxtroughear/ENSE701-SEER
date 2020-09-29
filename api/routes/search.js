@@ -8,8 +8,16 @@ const db = require('mongoose').connection;
 router.get('/search', function (req, res) {
   // res.json(db.collection('articles').find({ title: req.query.search_query }));
 
+  // don't modify the request object
+  let findQuery = req.query;
+
+  // convert the title string query to a regular expression so that we can effectively do a LIKE query
+  if (req.query.title) {
+    findQuery.title = new RegExp(req.query.title, 'i');
+  }
+
   // using the Article model, find anything in the database that matches the query (can include any fields in the article model)
-  Article.find(req.query, (err, doc) => {
+  Article.find(findQuery, (err, doc) => {
     res.json(doc);
   });
 })
