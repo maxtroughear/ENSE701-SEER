@@ -3,7 +3,11 @@ var router = express.Router();
 
 const db = require('mongoose').connection;
 
-/* GET home page. */
+const search = require('./search');
+
+router.use(search);
+
+// /* GET home page. */
 router.get('/', function (req, res, next) {
   res.json({
     message: "Hello World",
