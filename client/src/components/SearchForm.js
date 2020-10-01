@@ -58,7 +58,14 @@ function SearchForm() {
 
   function handleSearch(e) {
     e.preventDefault();
-    makeRequest(`/search?title=${title}`)
+    let query = `title=${title}&date=${JSON.stringify(
+      {
+        $gte: fromDate.toJSON(),
+        $lte: toDate.toJSON()
+      }
+    )}`;
+
+    makeRequest(`/search?${query}`);
   }
 
   function clearSearch() {
