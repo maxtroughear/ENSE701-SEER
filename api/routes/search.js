@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 var express = require('express');
 const { Article } = require('../models/article');
 var router = express.Router();
@@ -12,8 +13,20 @@ router.get('/search', function (req, res) {
   let findQuery = req.query;
 
   // convert the title string query to a regular expression so that we can effectively do a LIKE query
-  if (req.query.title) {
-    findQuery.title = new RegExp(req.query.title, 'i');
+  if (findQuery.title) {
+    findQuery.title = new RegExp(findQuery.title, 'i');
+  }
+
+  // check if query parameter date exists. attempt to parse the date range json
+  if (findQuery.date) {
+    try {
+      findQuery.date = JSON.parse(findQuery.date);
+    } catch (e) {
+      console.error('failed to parse query: ', findQuery);
+      console.error(e);
+      res.status(400);
+      return res.end();
+    }
   }
 
   // using the Article model, find anything in the database that matches the query (can include any fields in the article model)
@@ -32,6 +45,7 @@ router.post('/debugsubmit', function (req, res) {
   // create a new article using the Article model
   const newArticle = new Article({
     title: req.body.title,
+    date: req.body.date
   });
 
   // save the new article and then when done, send back the created article with its id
