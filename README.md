@@ -10,6 +10,11 @@
 
 To use this stack, a `MONGO_URL` is a required environment variable for the backend api
 
+The dev server can be started by running from the top level directory
+
+    npm install
+    npm run dev
+
 The full stack can be started by running the following from the top level directory. This will install all dependencies for both the backend and frontend, create an optimised build of the frontend and start the backend server. The backend server will then serve the optimised build of the frontend.
 
     npm run build
