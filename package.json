@@ -18,7 +18,7 @@
     "url": "https://github.com/maxtroughear/ENSE701-SEER/issues"
   },
   "homepage": "https://github.com/maxtroughear/ENSE701-SEER#readme",
-  "dependencies": {
+  "devDependencies": {
     "concurrently": "^5.3.0"
   }
 }
