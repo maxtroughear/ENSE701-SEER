@@ -88,11 +88,18 @@ function SearchForm() {
     return results.map((r, index) => {
       return (
         <Card fluid key={"search-results-" + index}>
-          <Card.Content header={r.title} />
-          <Card.Content description={<p>Result description</p>} />
+          <Card.Content>
+            <Card.Header>{r.title}</Card.Header>
+            <Card.Meta><span className='date'>{new Date(r.date).toLocaleDateString()}</span></Card.Meta>
+            <Card.Description>{<p>{r.summary}</p>}</Card.Description>
+          </Card.Content>
+          <Card.Content extra>
+            <Icon name='building' />
+            Category: {r.category}
+          </Card.Content>
           <Card.Content extra>
             <Icon name='user' />
-            Author: 'Someone'
+            Author: {r.author}
           </Card.Content>
         </Card>
       );
