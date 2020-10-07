@@ -16,37 +16,42 @@ function DateFields(props) {
 
   function handleChangeTo(date) {
     onToDateChange(date);
+    return (
+      <Form.Group>
+        <Form.Field>
+          <label>From</label>
+          <DatePicker
+            selected={fromDateValue}
+            onChange={handleChangeFrom}
+            dateFormat="d/MM/yyyy"
+          />
+        </Form.Field>
+        <Form.Field>
+          <label>To</label>
+          <DatePicker
+            selected={toDateValue}
+            onChange={handleChangeTo}
+            dateFormat="d/MM/yyyy"
+          />
+        </Form.Field>
+      </Form.Group>
+    );
   }
-
-  return (
-    <Form.Group>
-      <Form.Field>
-        <label>From</label>
-        <DatePicker
-          selected={fromDateValue}
-          onChange={handleChangeFrom}
-          dateFormat="d/MM/yyyy"
-        />
-      </Form.Field>
-      <Form.Field>
-        <label>To</label>
-        <DatePicker
-          selected={toDateValue}
-          onChange={handleChangeTo}
-          dateFormat="d/MM/yyyy"
-        />
-      </Form.Field>
-    </Form.Group>
-  );
 }
 
-function SearchForm() {
+function SubmitForm() {
   const [activeIndex, setActiveIndex] = useState(-1);
 
+  const [author, setAuthor] = useState('');
   const [title, setTitle] = useState('');
-  const [fromDate, setFromDate] = useState(new Date(0));
-  const [toDate, setToDate] = useState(new Date());
-
+  const [journal, setJournal] = useState('');
+  const [year, setYear] = useState('');
+  const [volume, setVolume] = useState('');
+  const [number, setNumber] = useState('');
+  const [pages, setPages] = useState('');
+  const [month, setMonth] = useState('');
+  const [doi, setDoi] = useState('');
+  const [article, setArticle] = useState('');
   const [makeRequest, { data: results, loading }] = useLazyAPI();
 
   function handleClick(e, titleProps) {
@@ -59,19 +64,23 @@ function SearchForm() {
   function handleSearch(e) {
     e.preventDefault();
     let query = `title=${title}&date=${JSON.stringify(
-      {
-        $gte: fromDate.toJSON(),
-        $lte: toDate.toJSON()
-      }
+
     )}`;
 
     makeRequest(`/search?${query}`);
   }
 
   function clearSearch() {
+    setAuthor('');
     setTitle('');
-    setFromDate(new Date(0));
-    setToDate(new Date());
+    setJournal('');
+    setYear('');
+    setVolume('');
+    setNumber('');
+    setPages('');
+    setMonth('');
+    setDoi('');
+    setArticle('');
   }
 
   function ResultsComponent() {
@@ -104,40 +113,34 @@ function SearchForm() {
       <Platform>
         <Grid.Row>
           <Grid.Column>
-            <Header as="h1" textAlign="center">Search</Header>
+            <Header as="h1" textAlign="center">Submission</Header>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>
             <Form onSubmit={handleSearch}>
               <Form.Field>
-                <Form.Input
-                  fluid
-                  icon="search"
-                  placeholder="Search..."
-                  onChange={(e) => setTitle(e.target.value)}
-                  value={title}
-                />
+              <Form.Input fluid icon="author" placeholder="author..." onChange={(e) => setAuthor(e.target.value)} value={author} required/>
+              <Form.Input fluid icon="title" placeholder="title..." onChange={(e) => setTitle(e.target.value)} value={title} required/>
+              <Form.Input fluid icon="journal" placeholder="journal..." onChange={(e) => setJournal(e.target.value)} value={journal} required/>
+              <Form.Input fluid icon="year" placeholder="year..." onChange={(e) => setYear(e.target.value)} value={year} required/>
+              <Form.Input fluid icon="volume" placeholder="volume..." onChange={(e) => setVolume(e.target.value)} value={volume} required/>
+              <Form.Input fluid icon="number" placeholder="number..." onChange={(e) => setNumber(e.target.value)} value={number} required/>
+              <Form.Input fluid icon="pages" placeholder="pages..." onChange={(e) => setPages(e.target.value)} value={pages} required/>
+              <Form.Input fluid icon="month" placeholder="month..." onChange={(e) => setMonth(e.target.value)} value={month} required/>
+              <Form.Input fluid icon="doi" placeholder="doi..." onChange={(e) => setDoi(e.target.value)} value={doi} required/>
+              <Form.Input fluid icon="article" placeholder="article..." onChange={(e) => setArticle(e.target.value)} value={article} required />
               </Form.Field>
-              <Accordion exclusive={false}>
-                <Accordion.Title
-                  active={activeIndex === 0}
-                  content='Filter by Date'
-                  index={0}
-                  onClick={handleClick}
-                />
-                <Accordion.Content
-                  active={activeIndex === 0}
-                  content={
-                    <DateFields
-                      onFromDateChange={setFromDate}
-                      onToDateChange={setToDate}
-                      fromDateValue={fromDate}
-                      toDateValue={toDate}
-                    />
-                  }
-                />
-              </Accordion>
+              <p>{author}</p>
+              <p>{title}</p>
+              <p>{journal}</p>
+              <p>{year}</p>
+              <p>{volume}</p>
+              <p>{number}</p>
+              <p>{pages}</p>
+              <p>{month}</p>
+              <p>{doi}</p>
+              <p>{article}</p>
               <Form.Group>
                 <Form.Button type="submit">Search</Form.Button>
                 <Form.Button type="button" onClick={clearSearch}>Clear</Form.Button>
@@ -145,24 +148,9 @@ function SearchForm() {
             </Form>
           </Grid.Column>
         </Grid.Row>
-      </Platform>
-      {/* results */}
-      <Platform>
-        <Grid.Row>
-          <Grid.Column>
-            <Header as="h3" textAlign="center">Results</Header>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column>
-            <Card.Group centered className={style.results}>
-              <ResultsComponent />
-            </Card.Group>
-          </Grid.Column>
-        </Grid.Row>
-      </Platform>
+     </Platform>      {/* results */}
     </>
   );
 }
 
-export default SearchForm;
+export default SubmitForm;
