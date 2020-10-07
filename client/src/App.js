@@ -11,6 +11,7 @@ import './App.css';
 import HeaderBar from './components/HeaderBar';
 import SearchFrom from './components/SearchForm';
 import SubmitForm from './components/SubmitForm';
+import DebugSubmitForm from './components/DebugSubmitForm';
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
         <HeaderBar />
         <Container>
           <Switch>
+            <Route path="/debugsubmit">
+              <DebugSubmitForm />
+            </Route>
             <Route path="/submit">
               <SubmitForm />
             </Route>

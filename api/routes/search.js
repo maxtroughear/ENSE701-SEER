@@ -43,6 +43,7 @@ router.post('/submit', function (req, res, next) {
 
 router.post('/debugsubmit', function (req, res) {
   // create a new article using the Article model
+
   const newArticle = new Article({
     title: req.body.title,
     date: req.body.date
