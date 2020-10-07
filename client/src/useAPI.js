@@ -39,8 +39,6 @@ function useLazyAPI() {
     let isStopped = false
     setLoading(true);
 
-    console.log('making request');
-
     if (!isStopped) {
       setLoading(true);
       axios.get(buildRequest(resource))
@@ -61,7 +59,38 @@ function useLazyAPI() {
   return [makeRequest, { data, loading, error }]
 }
 
+function useSubmitAPI(resource) {
+  const [loading, setLoading] = React.useState(false);
+  const [data, setData] = React.useState(null);
+  const [error, setError] = React.useState(null);
+
+  const makeRequest = (variables) => {
+    let isStopped = false
+    setLoading(true);
+
+    if (!isStopped) {
+      setLoading(true);
+      axios.post(buildRequest(resource), {
+        ...variables
+      }).then(function (response) {
+        setData(response.data);
+        setLoading(false);
+      }).catch(function (err) {
+        setError(err);
+        setLoading(false);
+      });
+    }
+
+    return () => {
+      isStopped = true
+    }
+  }
+
+  return [makeRequest, { data, loading, error }]
+}
+
 export {
   useAPI,
   useLazyAPI,
+  useSubmitAPI,
 }
