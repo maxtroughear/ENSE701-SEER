@@ -35,12 +35,6 @@ router.get('/search', function (req, res) {
   });
 })
 
-//post data for the submissions form into the db
-router.post('/submit', function (req, res, next) {
-  //check the db to see if the submission is in the declined pile  ***DO LATER AFTER POSTING TO DB IS WORKING***
-
-})
-
 router.post('/debugsubmit', function (req, res) {
   // create a new article using the Article model
 

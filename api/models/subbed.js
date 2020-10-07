@@ -15,8 +15,8 @@ article: String
 });
 
 // the schema must be turned to a model to be used and a collection can be created by mongoose
-const Subbed = model('Submitted', submissionSchema);
+const Subb = model('Submitted', submissionSchema);
 
 module.exports = {
-  Subbed
+  Subb
 };

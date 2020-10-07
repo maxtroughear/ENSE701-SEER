@@ -1,5 +1,5 @@
 var express = require('express');
-const { Subbed } = require('../models/article');
+const { Subb } = require('../models/subbed');
 var router = express.Router();
 
 const db = require('mongoose').connection;
@@ -22,16 +22,10 @@ router.get('/submit', function (req, res) {
   });
 })
 
-//post data for the submissions form into the db
-router.post('/submit', function (req, res, next) {
-  //check the db to see if the submission is in the declined pile  ***DO LATER AFTER POSTING TO DB IS WORKING***
-
-})
-
-router.post('/debugsubmit', function (req, res) {
+router.post('/submit', function (req, res) {
   // create a new article using the Article model
-  const newArticle = new Article({
-    title: req.body.title,
+  const newArticle = new Subb({
+    ...req.body
   });
 
   // save the new article and then when done, send back the created article with its id

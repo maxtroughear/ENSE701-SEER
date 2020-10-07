@@ -4,8 +4,10 @@ var router = express.Router();
 const db = require('mongoose').connection;
 
 const search = require('./search');
+const submit = require('./submit');
 
 router.use(search);
+router.use(submit);
 
 // /* GET home page. */
 router.get('/', function (req, res, next) {
