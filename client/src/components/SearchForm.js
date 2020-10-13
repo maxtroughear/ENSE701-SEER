@@ -1,87 +1,171 @@
 import React, { useState } from 'react';
-import { Accordion, Card, Dimmer, Form, Grid, Header, Icon, Loader } from 'semantic-ui-react';
-import DatePicker from 'react-datepicker';
+import { Card, Form, Grid, Header, Icon } from 'semantic-ui-react';
 
 import Platform from './Platform';
 import { useLazyAPI } from '../useAPI';
 
 import style from './SearchForm.module.css';
 
-function DateFields(props) {
-  const { onFromDateChange, onToDateChange, fromDateValue, toDateValue } = props;
+const subjectOptions = [
+  { key: 'title', text: 'Title', value: 'title' },
+  { key: 'author', text: 'Author', value: 'author' },
+  { key: 'year', text: 'Year', value: 'year' },
+  { key: 'category', text: 'Category', value: 'category' },
+];
 
-  function handleChangeFrom(date) {
-    onFromDateChange(date)
+const filterOptions = [
+  { key: 'like', text: 'Like', value: '$regex' },
+  { key: 'equal', text: '=', value: '$eq' },
+  { key: 'gte', text: '>', value: '$gte' },
+  { key: 'lte', text: '<', value: '$lte' },
+];
+
+const initialFields = [
+  {
+    value: '',
+    filter: '$regex',
+    subject: 'title'
   }
-
-  function handleChangeTo(date) {
-    onToDateChange(date);
-  }
-
-  return (
-    <Form.Group>
-      <Form.Field>
-        <label>From</label>
-        <DatePicker
-          selected={fromDateValue}
-          onChange={handleChangeFrom}
-          dateFormat="d/MM/yyyy"
-        />
-      </Form.Field>
-      <Form.Field>
-        <label>To</label>
-        <DatePicker
-          selected={toDateValue}
-          onChange={handleChangeTo}
-          dateFormat="d/MM/yyyy"
-        />
-      </Form.Field>
-    </Form.Group>
-  );
-}
+]
 
 function SearchForm() {
-  const [activeIndex, setActiveIndex] = useState(-1);
-
-  const [title, setTitle] = useState('');
-  const [fromDate, setFromDate] = useState(new Date(0));
-  const [toDate, setToDate] = useState(new Date());
+  const [fields, setFields] = useState(initialFields);
 
   const [makeRequest, { data: results, loading }] = useLazyAPI();
 
-  function handleClick(e, titleProps) {
-    const { index } = titleProps
-    const newIndex = activeIndex === index ? -1 : index
-
-    setActiveIndex(newIndex);
-  }
-
   function handleSearch(e) {
     e.preventDefault();
-    let query = `title=${title}&date=${JSON.stringify(
-      {
-        $gte: fromDate.toJSON(),
-        $lte: toDate.toJSON()
-      }
-    )}`;
 
-    makeRequest(`/search?${query}`);
+    let query = {};
+
+    fields.forEach((field) => {
+      let tempField = query[field.subject] || {};
+
+      tempField[field.filter] = field.value;
+
+      // special case for regular expression, make the regular expression ignore case
+      if (field.filter === '$regex') {
+        tempField = {
+          ...tempField,
+          $options: 'i'
+        }
+      }
+
+      query[field.subject] = tempField;
+    });
+
+    console.log(query);
+
+    makeRequest(`/search?query=${JSON.stringify(query)}`);
   }
 
   function clearSearch() {
-    setTitle('');
-    setFromDate(new Date(0));
-    setToDate(new Date());
+    setFields(initialFields);
+  }
+
+  function Fields() {
+    return fields.map((field, index) => {
+      return (
+        <Form.Group key={`field - ${index} `} width="16">
+          <Form.Dropdown
+            key={`field - subject - ${index} `}
+            label="Subject"
+            width="4"
+            search
+            selection
+            options={subjectOptions}
+            onChange={(e, data) => handleSubjectChange(index, data)}
+            value={field.subject}
+            fluid
+          />
+          <Form.Dropdown
+            key={`field - filter - ${index} `}
+            label="Filter"
+            width="2"
+            search
+            selection
+            options={filterOptions}
+            onChange={(e, data) => handleFilterChange(index, data)}
+            value={field.filter}
+            fluid
+          />
+          <Form.Input
+            key={`field - value - ${index} `}
+            label="Value"
+            placeholder={field.name}
+            width="8"
+            onChange={(e, data) => handleValueChange(index, data)}
+            value={field.value}
+          />
+          <Form.Button label="Remove" type="button" onClick={() => removeField(index)} width="2" fluid><Icon name="trash" /></Form.Button>
+        </Form.Group>
+      );
+    });
+  }
+
+  function handleSubjectChange(index, { value }) {
+    setFields((previousFields) => previousFields.map((field, fieldIndex) => {
+      if (fieldIndex === index) {
+        return {
+          ...field,
+          subject: value,
+        }
+      }
+      return field;
+    }))
+  };
+
+  function handleFilterChange(index, { value }) {
+    setFields((previousFields) => previousFields.map((field, fieldIndex) => {
+      if (fieldIndex === index) {
+        return {
+          ...field,
+          filter: value,
+        }
+      }
+      return field;
+    }))
+  };
+
+  function handleValueChange(index, { value }) {
+    setFields((previousFields) => previousFields.map((field, fieldIndex) => {
+      if (fieldIndex === index) {
+        return {
+          ...field,
+          value: value,
+        }
+      }
+      return field;
+    }))
+  };
+
+  function addField() {
+    setFields((previousFields) => [
+      ...previousFields,
+      {
+        value: '',
+        filter: '',
+        subject: '',
+      }
+    ]);
+  }
+
+  function removeField(index) {
+    setFields((previousFields) => {
+      return previousFields.filter((_, fieldIndex) => {
+        return fieldIndex !== index;
+      })
+    });
   }
 
   function ResultsComponent() {
-    if (loading) {
-      return (
-        <Dimmer active inverted>
-          <Loader>Searching</Loader>
-        </Dimmer>
-      )
-    }
+    // if (loading) {
+    //   return (
+    //     <Dimmer active inverted>
+    //       <Loader>Searching</Loader>
+    //     </Dimmer>
+    //   )
+    // }
     if (results == null) {
       return null;
     }
@@ -90,16 +174,16 @@ function SearchForm() {
         <Card fluid key={"search-results-" + index}>
           <Card.Content>
             <Card.Header>{r.title}</Card.Header>
-            <Card.Meta><span className='date'>{new Date(r.date).toLocaleDateString()}</span></Card.Meta>
+            <Card.Meta><span className='date'>{r.year || 'Unknown'}</span></Card.Meta>
             <Card.Description>{<p>{r.summary}</p>}</Card.Description>
           </Card.Content>
           <Card.Content extra>
             <Icon name='building' />
-            Category: {r.category}
+            Category: {r.category || 'Unknown'}
           </Card.Content>
           <Card.Content extra>
             <Icon name='user' />
-            Author: {r.author}
+            Author: {r.author || 'Anonymous'}
           </Card.Content>
         </Card>
       );
@@ -116,38 +200,12 @@ function SearchForm() {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>
-            <Form onSubmit={handleSearch}>
-              <Form.Field>
-                <Form.Input
-                  fluid
-                  icon="search"
-                  placeholder="Search..."
-                  onChange={(e) => setTitle(e.target.value)}
-                  value={title}
-                />
-              </Form.Field>
-              <Accordion exclusive={false}>
-                <Accordion.Title
-                  active={activeIndex === 0}
-                  content='Filter by Date'
-                  index={0}
-                  onClick={handleClick}
-                />
-                <Accordion.Content
-                  active={activeIndex === 0}
-                  content={
-                    <DateFields
-                      onFromDateChange={setFromDate}
-                      onToDateChange={setToDate}
-                      fromDateValue={fromDate}
-                      toDateValue={toDate}
-                    />
-                  }
-                />
-              </Accordion>
-              <Form.Group>
+            <Form onSubmit={handleSearch} loading={loading}>
+              {Fields()}
+              <Form.Group key="buttons">
                 <Form.Button type="submit">Search</Form.Button>
-                <Form.Button type="button" onClick={clearSearch}>Clear</Form.Button>
+                <Form.Button type="button" onClick={addField}>Add Field</Form.Button>
+                <Form.Button type="button" onClick={clearSearch}>Reset</Form.Button>
               </Form.Group>
             </Form>
           </Grid.Column>
