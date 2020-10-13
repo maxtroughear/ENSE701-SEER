@@ -1,32 +1,17 @@
 import React, { useState } from 'react';
 import { Card, Dimmer, Form, Grid, Header, Icon, Loader } from 'semantic-ui-react';
-import DatePicker from 'react-datepicker';
 
 import Platform from './Platform';
 import { useSubmitAPI } from '../useAPI';
 
 import style from './SearchForm.module.css';
 
-function DateField(props) {
-  const { onDateChange, dateValue } = props;
-
-  return (
-    <Form.Group>
-      <Form.Field>
-        <label>Date</label>
-        <DatePicker
-          selected={dateValue}
-          onChange={onDateChange}
-          dateFormat="d/MM/yyyy"
-        />
-      </Form.Field>
-    </Form.Group>
-  );
-}
-
 function SubmitForm() {
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [author, setAuthor] = useState('');
+  const [category, setCategory] = useState('');
+  const [summary, setSummary] = useState('');
+  const [year, setYear] = useState(new Date().getFullYear());
 
   const [makeRequest, { data: results, loading }] = useSubmitAPI('/debugsubmit');
 
@@ -35,13 +20,19 @@ function SubmitForm() {
 
     makeRequest({
       title,
-      date
+      year,
+      author,
+      category,
+      summary,
     });
   }
 
   function clearForm() {
     setTitle('');
-    setDate(new Date());
+    setYear(new Date().getFullYear());
+    setAuthor('');
+    setCategory('');
+    setSummary('');
   }
 
   function ResultsComponent() {
@@ -93,10 +84,38 @@ function SubmitForm() {
                   value={title}
                 />
               </Form.Field>
-              <DateField
-                onDateChange={setDate}
-                dateValue={date}
-              />
+              <Form.Field>
+                <Form.Input
+                  fluid
+                  placeholder="Year"
+                  onChange={(e) => setYear(e.target.value)}
+                  value={year}
+                />
+              </Form.Field>
+              <Form.Field>
+                <Form.Input
+                  fluid
+                  placeholder="Author"
+                  onChange={(e) => setAuthor(e.target.value)}
+                  value={author}
+                />
+              </Form.Field>
+              <Form.Field>
+                <Form.Input
+                  fluid
+                  placeholder="Category"
+                  onChange={(e) => setCategory(e.target.value)}
+                  value={category}
+                />
+              </Form.Field>
+              <Form.Field>
+                <Form.TextArea
+                  fluid
+                  placeholder="Summary"
+                  onChange={(e) => setSummary(e.target.value)}
+                  value={summary}
+                />
+              </Form.Field>
               <Form.Group>
                 <Form.Button type="submit">Submit</Form.Button>
                 <Form.Button type="button" onClick={clearForm}>Clear</Form.Button>

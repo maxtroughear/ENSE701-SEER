@@ -7,23 +7,33 @@ afterEach(cleanup);
 
 const setup = () => {
   const utils = render(<SearchForm />);
-  const searchBar = utils.getByPlaceholderText('Search...');
+  const subject = utils.getByText('Subject');
+  const filter = utils.getByText('Filter');
+  const value = utils.getByText('Value');
+
+  const subjectInput = subject.nextSibling.firstChild;
+  const subjectInputValue = subjectInput.nextSibling.textContent;
+
   return {
-    searchBar,
+    subject,
+    subjectInput,
+    subjectInputValue,
+    filter,
+    value,
     ...utils
   };
 }
 
 describe('Search', function () {
-  test('Insert text to searchbar', async function () {
-    const { searchBar } = setup();
-    fireEvent.change(searchBar, { target: { value: 'Programming' } });
-    expect(searchBar.value).toBe('Programming');
+  test('Insert text to subject', async function () {
+    const { subjectInput } = setup();
+    fireEvent.change(subjectInput, { target: { value: 'Category' } });
+    expect(subjectInput.value).toBe('Category');
   });
 
   test('Clear search', async function () {
-    const { searchBar, getByText } = setup();
-    getByText('Clear').click();
-    expect(searchBar.value).toBe('');
+    const { subjectInputValue, getByText } = setup();
+    getByText('Reset').click();
+    expect(subjectInputValue).toBe('Title');
   });
 });
