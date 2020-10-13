@@ -1,46 +1,20 @@
-const { json } = require('body-parser');
 var express = require('express');
-const { Article } = require('../models/article');
+const { Subb } = require('../models/subbed');
 var router = express.Router();
 
 const db = require('mongoose').connection;
 
 //get request for the text that the user enters into the search bar
-router.get('/search', function (req, res) {
+router.get('/submit', function (req, res) {
   // res.json(db.collection('articles').find({ title: req.query.search_query }));
 
   // don't modify the request object
   let findQuery = req.query;
 
-  console.log(findQuery.query);
-
-  try {
-    findQuery = JSON.parse(findQuery.query);
-  } catch (e) {
-    console.error('failed to parse query', findQuery);
-    console.error(e);
-    res.status(400);
-    return res.end();
-  }
-
-  console.log(findQuery);
-
   // convert the title string query to a regular expression so that we can effectively do a LIKE query
-  // if (findQuery.title) {
-  //   findQuery.title = new RegExp(findQuery.title, 'i');
-  // }
-
-  // check if query parameter date exists. attempt to parse the date range json
-  // if (findQuery.date) {
-  //   try {
-  //     findQuery.date = JSON.parse(findQuery.date);
-  //   } catch (e) {
-  //     console.error('failed to parse query: ', findQuery);
-  //     console.error(e);
-  //     res.status(400);
-  //     return res.end();
-  //   }
-  // }
+  if (req.query.title) {
+    findQuery.title = new RegExp(req.query.title, 'i');
+  }
 
   // using the Article model, find anything in the database that matches the query (can include any fields in the article model)
   Article.find(findQuery, (err, doc) => {
@@ -48,10 +22,9 @@ router.get('/search', function (req, res) {
   });
 })
 
-router.post('/debugsubmit', function (req, res) {
+router.post('/submit', function (req, res) {
   // create a new article using the Article model
-
-  const newArticle = new Article({
+  const newArticle = new Subb({
     ...req.body
   });
 
